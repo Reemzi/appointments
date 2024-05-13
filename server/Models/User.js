@@ -16,15 +16,6 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     match: /^\S+@\S+\.\S+$/,
   },
-  date: {
-    type: Date,
-    required: true,
-  },
-  time: {
-    type: String,
-    required: true,
-  },
-  note: String,
 });
 
 const User = mongoose.model("User", userSchema);
