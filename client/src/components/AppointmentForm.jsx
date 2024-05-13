@@ -57,7 +57,9 @@ const AppointmentForm = () => {
 
     try {
       // Send form data to backend server
-      await axios.post("/api/appointments", formData);
+      // const apiUrl = `${process.env.REACT_APP_API_BASE_URL}/appointments`;
+      const apiUrl = "http://localhost:5000/api/appointments";
+      await axios.post(apiUrl, formData);
 
       // Clear form fields after successful submission
       setFormData({

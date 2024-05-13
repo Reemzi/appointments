@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+// Define the Appointment Schema
+const appointmentSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
   },
-  lastname: {
+  lastName: {
     type: String,
     required: true,
   },
@@ -13,8 +14,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    lowercase: true,
-    match: /^\S+@\S+\.\S+$/,
+    // Validate email format using regex
+    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   date: {
     type: Date,
@@ -27,6 +28,6 @@ const userSchema = new mongoose.Schema({
   note: String,
 });
 
-const User = mongoose.model("User", userSchema);
+const Appointment = mongoose.model("Appointment", appointmentSchema);
 
-module.exports = User;
+module.exports = Appointment;
