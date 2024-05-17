@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// Define the Appointment Schema
+//@TODO: Add a reference to the user and the employee and also a reference appointment itself.
 const appointmentSchema = new mongoose.Schema({
   name: {
     type: String,

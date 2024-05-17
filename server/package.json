@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "start": "node index.js",
+    "client": "npm start --prefix client",
+    "server": "nodemon index.js"
   },
   "keywords": [],
   "author": "",

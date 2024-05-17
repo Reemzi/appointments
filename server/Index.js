@@ -1,60 +1,39 @@
-const express = require("express");
-const cors = require("cors");
-const Appointment = require("./Models/appointment");
-const User = require("./Models/User");
+import express from 'express';
+import cors from 'cors';
+import userRoutes from './routes/users.js';
+import appointmentRoutes from './routes/appointments.js';
+import employeeRoutes from './routes/employees.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import './db/connection.js'; 
+
 const app = express();
 const PORT = process.env.PORT || 5000;
-app.use(cors());
 
-// Connect to MongoDB
-require("./db/connection");
+// Middleware 
+app.use(cors(cors({
+  origin: 'http://localhost:5173', // frontend url
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+})));
+app.use(express.json()); 
+
+// Routes
+app.use('/clients', userRoutes);
+app.use('/appointments', appointmentRoutes);
+app.use('/employees', employeeRoutes);
+
 console.log("Database connected.");
-app.get("/create-appointment", async (req, res) => {
-  try {
-    // Create a new appointment instance
-    const newAppointment = new Appointment({
-      name: "John",
-      lastName: "Doe",
-      email: "johndoe@example.com",
-      date: new Date(),
-      time: "10:00 AM",
-      note: "Follow-up appointment",
-    });
 
-    // Save the appointment to the database
-    const savedAppointment = await newAppointment.save();
-    res.send(savedAppointment);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
+// Static files 
+if (process.env.NODE_ENV === 'production') {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url)); 
+  app.use(express.static(path.join(__dirname, 'client', 'build')));
 
-app.get("/create-user", async (req, res) => {
-  try {
-    // Create a new user instance
-    const newUser = new User({
-      name: "Jane",
-      lastname: "Smith",
-      email: "janesmith@example.com",
-      date: new Date(),
-      time: "2:00 PM",
-      note: "New user registration",
-    });
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
-    // Save the user to the database
-    const savedUser = await newUser.save();
-    res.send(savedUser);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
-
-app.post("/api/appointments", (req, res) => {
-  // Handle appointment creation logic here
-  res.json({ message: "Appointment booked successfully!" });
-});
-
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
