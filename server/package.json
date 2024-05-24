@@ -1,11 +1,12 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.mjs",
     "client": "npm start --prefix client",
-    "server": "nodemon index.js"
+    "server": "nodemon index.mjs"
   },
   "keywords": [],
   "author": "",

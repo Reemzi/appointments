@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-//@TODO: Add a reference to the user and the employee and also a reference appointment itself.
 const appointmentSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -14,7 +13,6 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    // Validate email format using regex
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   date: {
@@ -30,4 +28,4 @@ const appointmentSchema = new mongoose.Schema({
 
 const Appointment = mongoose.model("Appointment", appointmentSchema);
 
-module.exports = Appointment;
+export default Appointment;
