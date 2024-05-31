@@ -1,6 +1,16 @@
 import mongoose from "mongoose";
 
 const appointmentSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  employee: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Employee",
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -13,7 +23,6 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   date: {
     type: Date,

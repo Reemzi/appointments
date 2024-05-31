@@ -20,16 +20,11 @@ app.use(
 app.use(express.json());
 
 // Routes
-app.use("/users", userRoutes);
-app.use("/appointments", appointmentRoutes);
-app.use("/employees", employeeRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/appointments", appointmentRoutes);
+app.use("/api/employees", employeeRoutes);
 
 console.log("Database connected.");
-
-// Routes
-app.use("/users", userRoutes);
-app.use("/appointments", appointmentRoutes);
-app.use("/employees", employeeRoutes);
 
 // Root route handler
 app.get("/", (req, res) => {
