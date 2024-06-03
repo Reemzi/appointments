@@ -1,4 +1,5 @@
 import express from "express";
+// import User from "../models/user.js"; // Ensure the User model is imported
 import Appointment from "../models/appointment.js";
 
 const router = express.Router();
@@ -15,16 +16,6 @@ router.post("/", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-// Retrieve all appointments
-router.get("/", async (req, res) => {
-  try {
-    const appointments = await Appointment.find();
-    res.status(200).json(appointments);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // Retrieve a specific appointment by ID
 router.get("/:id", async (req, res) => {
   try {
@@ -37,17 +28,27 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+//
+router.get("/", async (req, res) => {
+  try {
+    const appointment = await Appointment.find();
+    res.status(200).json(appointment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Retrieve a specific appointment by email
 router.get("/email/:email", async (req, res) => {
   try {
-    const appointment = await Appointment.findById(req.params.email);
+    const appointment = await Appointment.findOne({ email: req.params.email });
     if (!appointment) {
-      return res.status(404).json({ message: "Appointment not found" });
+      return res.status(404).json({ error: "Appointment by email not found" });
     }
-    res.status(200).json(appointment);
+    res.json(appointment);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Error fetching appointment details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

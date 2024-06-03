@@ -3,13 +3,14 @@ import styled from "styled-components";
 import axios from "axios";
 
 const FormContainer = styled.div`
-  max-width: 400px;
   margin: 0 auto;
 `;
 
 const Form = styled.form`
-  display: flex;
-  flex-direction: column;
+  background-color: #f4f4f4;
+  padding: 50px;
+  border-radius: 5px;
+  margin: 0 50px;
 `;
 
 const FormGroup = styled.div`
@@ -17,14 +18,16 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  margin-bottom: 8px;
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
 `;
 
 const Input = styled.input`
-  padding: 8px;
-  margin-bottom: 8px;
-  border-radius: 5px;
+  width: 100%;
+  padding: 10px;
   border: 1px solid #ccc;
+  border-radius: 5px;
 `;
 
 const TextArea = styled.textarea`
@@ -35,17 +38,24 @@ const TextArea = styled.textarea`
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
+  background-color: #121412;
+  color: white;
+  padding: 10px;
+  margin-top: 10px;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
-  margin-top: 16px;
+  &:disabled {
+    opacity: 0.5;
+  }
+  &:enabled {
+    opacity: 1;
+  }
 `;
 
 const ToggleButton = styled.button`
   padding: 8px;
-  margin-bottom: 16px;
+  margin: 0 50px;
   background-color: #6c757d;
   color: #fff;
   border: none;
@@ -101,19 +111,32 @@ const AppointmentForm = () => {
       }));
     } catch (error) {
       console.error("Error fetching user details:", error);
-      alert(
-        "Failed to fetch user details. Please check the email and try again."
-      );
+      if (error.response) {
+        // Handle different response status codes
+        if (error.response.status === 404) {
+          alert("User not found. Please check the email and try again.");
+        } else {
+          alert("Failed to fetch user details. Please try again later.");
+        }
+      } else {
+        alert(
+          "Failed to fetch user details. Please check your network connection and try again."
+        );
+      }
+    }
+  };
+
+  const handleFetchUser = async () => {
+    if (!isNewUser && formData.email) {
+      await fetchExistingUserDetails(formData.email);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
 
-    if (!isNewUser) {
-      await fetchExistingUserDetails(formData.email);
-    }
+    // Log the form data to see what is being sent
+    console.log("Form Data before submitting:", formData);
 
     try {
       const apiUrl = "http://localhost:5000/api/appointments";
@@ -128,13 +151,23 @@ const AppointmentForm = () => {
         notes: "",
       });
 
-      console.log("Form cleared");
-
       nameRef.current.focus();
 
       alert("Appointment booked successfully!");
     } catch (error) {
       console.error("Error booking appointment:", error);
+      if (error.response) {
+        // Server responded with a status other than 2xx
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      } else if (error.request) {
+        // Request was made but no response was received
+        console.error("Request data:", error.request);
+      } else {
+        // Something happened in setting up the request
+        console.error("Error message:", error.message);
+      }
       alert("Failed to book appointment. Please try again.");
     }
   };
@@ -175,6 +208,7 @@ const AppointmentForm = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            onBlur={handleFetchUser}
             ref={emailRef}
           />
         </FormGroup>
